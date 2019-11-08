@@ -1,24 +1,29 @@
 import numpy as np
 import pandas as pd
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Activation
+from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
-from sklearn.model_selection import GridSearchCV
+from CreateDataSet import create_dataset_helper
+from CreateDataSet import read_dataset
+from CreateDataSet import write_dataset
 
-from CreateDataSet import create_dataset
+Xtrain, ytrain, Xtest, ytest = read_dataset(['Xtrainpoly.csv', 'ytrainpoly.csv', 'Xtestpoly.csv', 'ytestpoly.csv'])
 
-dataset = create_dataset(100000,0,10,1,1,1,save=True)
-print("done getting data")
-Xtrain, ytrain, Xtest, ytest = dataset["Xtrain"], dataset["ytrain"], dataset["Xtest"], dataset["ytest"]
+#nn = MLPRegressor(hidden_layer_sizes=(100,100), activation='tanh',)
+#nn.fit(Xtrain,ytrain)
+#maybe use keras/tf so can use l1 penalty? or logreg/svm
 
-params = [
-    {'hidden_layer_sizes': [(100,), (10,10), (10,10,10), (100,100)], 'activation': ['identity', 'tanh', 'logistic', 'relu']}
-]
+model = Sequential()
+model.add(Dense(32, input_dim=7, activation='tanh'))
+#model.add(Dense(32, activation='tanh'))
+# so far worked better with single layer and polynomial feature trans on ytrain but maybe
+# that is probably unfair?
+model.add(Dense(5, activation='tanh'))
+model.compile(loss='mean_absolute_error')
+model.fit(Xtrain, ytrain, epochs=10)
 
-grid_search = GridSearchCV(MLPRegressor(max_iter=400), params, scoring='neg_mean_squared_error', cv=5, n_jobs=7, verbose=7)
-grid_search.fit(Xtrain, ytrain)
-
-df = pd.DataFrame.from_dict(grid_search.cv_results_)
-df.to_csv('gridsearchresults.csv', index=False)
-
-print(grid_search.best_estimator_.get_params())
-
-grid_search.score(Xtest,ytest)
+print(model.evaluate(Xtest, ytest))
+ypreds = model.predict(Xtest)
+write_dataset("ypreds", ypreds)
