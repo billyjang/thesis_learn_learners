@@ -1,0 +1,176 @@
+\documentclass [11pt] {report}
+
+\def\postscript#1{\special{#1}}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{fact}[theorem]{Fact}
+
+\def\sl{\it}
+\def\csc{\it}
+\def\focs#1{Proceedings of the #1 IEEE Symposium on the Foundations of
+Computer Science}
+\def\stoc#1{Proceedings of the #1 ACM Symposium on Theory of Computing}
+
+\def\th{^{th}}
+\def\st{^{st}}
+
+\def\bb {\hbox{			% A box that I use at the end of proofs.
+    \vrule height 8pt width .4pt\hskip -.4pt
+    \vbox{\hrule width 8pt height .4pt\vskip -.4pt
+          \vskip 8pt
+	  \vskip -.4pt\hrule width 8pt height .4pt}
+    \hskip -3.9pt
+    \vrule height 8pt width .4pt}\par\medskip}
+
+\def\proof{\noindent{\it Proof.}\ }
+
+\evensidemargin 0in
+\oddsidemargin 0in
+\textwidth 6.5in
+\topmargin 0in
+\textheight 8in
+
+\begin{document}
+\baselineskip 21pt
+\pagenumbering{roman}
+\evensidemargin 0.25in
+\footnotesep 14pt
+
+\begin{titlepage}
+\mbox{}
+\vspace{1in}
+\begin{center}
+\LARGE An Example of Thesis Formatting \\
+with \LaTeX \\[2in]
+\normalsize Lyle Andrew McGeoch \\[\medskipamount]
+March 27, 1990 \\[1in]
+Submitted to the \\
+Department of Mathematics and Computer Science \\
+of Amherst College \\
+in partial fulfillment of the requirements \\
+for the degree of \\
+Bachelor of Arts with Distinction
+\end{center}
+\vfill
+\begin{center}
+Copyright \copyright\ 1990 Lyle Andrew McGeoch
+\end{center}
+\end{titlepage}
+
+\evensidemargin 0in
+
+\chapter*{Abstract}
+This short example thesis meets all of the formatting requirements in
+Mathematics and Computer Science.
+
+\chapter*{Acknowledgements}
+
+\mbox{}\indent Thanks, Mom!
+
+\tableofcontents
+% \listoffigures
+\newpage
+
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+
+The study of {\sl graph invariants}, properties of graphs that are preserved
+by isomorphism, is central to graph theory.  Such properties are independent
+of the representation or labelling of graphs.  There are many examples of
+interesting graph invariants, such as vertex-count, edge-count, chromatic
+number, crossing-number, maximum clique-size, and characteristic equation.
+However, none of these invariants is a {\sl complete invariant} that is
+sufficient to distinguish non-isomorphic graphs.  There is no known
+complete invariant that can be determined in polynomial-time; the existence
+of such an invariant would imply a polynomial-time test for graph
+isomorphism.
+
+Topological graph theory, which examines how graphs can be
+imbedded in surfaces of different genus, may
+provide the insights needed to obtain a complete invariant that can be
+computed quickly.  This thesis presents results on two topological
+invariants:  the {\sl maximum genus} and the {\sl genus distribution
+}.
+
+A graph has cellular imbeddings in surfaces of each genus between some
+minimum and some maximum.  Progress has been made on understanding both
+minimum- and maximum-genus imbeddings.  There is a polynomial-time algorithm
+to find imbeddings in surfaces of fixed genus \cite{fmr}, and maximum genus
+has been related to other graph invariants \cite{xuong79a}.  Chapter
+2 presents a new polynomial-time algorithm that computes the
+maximum genus of a graph and finds a maximum-genus imbedding.  This seems to
+be the first polynomial-time algorithm that computes an interesting
+imbedding and runs in time independent of the genus of the imbedding
+surface.  The maximum-genus imbedding algorithm will also appear in
+\cite{fgm}.
+
+Chapter 3 presents results on the genus distribution of a graph,
+an invariant that describes how many cellular imbeddings there are in
+surfaces of different genus.  We completely calculate this distribution for
+two classes of graphs, {\sl circular} and {\sl M\"obius ladders} and
+consider it as a tool for determining graph isomorphism.  Genus distribution
+is not a complete invariant: there are an infinite number of pairs of
+non-isomorphic graphs with the same genus distribution. Experimental
+evidence also suggests that genus distribution is not a sufficiently strong
+invariant to be useful in testing the isomorphism of similar {\sl
+strongly-regular} graphs.
+
+\section{Preliminaries about Graph Imbeddings}
+
+In topological graph theory, a {\sl graph} is defined to be a (possibly)
+non-simplicial 1-complex.  In other words, multiple adjacencies and
+self-loops are permitted.  In this work, we consider only simplicial
+(simple) graphs.  Any graph containing self-loops and multiple adjacencies
+can be transformed into a simplicial graph by inserting one or more vertices
+in the interior of these edges.  Moreover, the resulting graph is
+homeomorphic to the original graph.  This enables us to simplify the
+notation.  We use the standard definitions relating to graphs (see, for
+example, Harary \cite{harary}).  All the graphs we discuss will be connected
+and undirected.
+
+\subsection{Surfaces}  Our terminology is compatible with that of Gross and
+Tucker \cite{gt} and of White \cite{white}.
+
+The {\it topological spaces} of interest here are all homeomorphic to
+subspaces of $E^3$.  A {\it homeomorphism} between two topological spaces is
+a continuous bijective mapping with a continuous inverse.  A connected
+two-dimensional subspace is a {\it surface} if every point has a neighborhood that
+is homeomorphic to the closed unit disk.  A surface $S$ is {\it orientable}
+if it does not contain a M\"obius band.
+
+We deal only with compact orientable surfaces.  Every such surface $S$ is
+homeomorphic to a generalized torus.  The number of handles is denoted
+$\gamma(S)$ and is called the {\it genus} of the surface.  A sphere, for
+example, is a surface of genus $0$, a torus is a surface of genus $1$, and a
+$2$-handled torus is a surface of genus $2$.
+
+\subsection {Graph imbeddings and faces} 
+Although a graph is an abstract
+combinatorial object, there is a topological representation of it:  in
+Euclidean 3-space, we represent each vertex by a distinct point and each
+edge by a distinct curve between the two endpoints, where a {\it curve}
+means a homeomorphic image of the unit interval [0,1].  We require that the
+interior of an edge intersect no other edge or vertex of the graph.  When
+referring to a graph in a topological setting, we mean such a
+representation.
+
+An {\it imbedding} $G \rightarrow S$ of a graph $G$ in the surface $S$ is a
+continuous one-to-one mapping.  The components of $S-G$ are
+called {\it regions}.  If each region is homeomorphic to an open disk, the
+imbedding is {\it cellular}, and the regions are called {\it faces}.  All our
+imbeddings are cellular.  The set of faces of an imbedding is denoted $F$.
+The Euler polyhedral equation 
+\begin{equation}
+|V| - |E| + |F| = 2 - 2\gamma(S)
+\label{eulereqn}
+\end{equation} holds for all cellular imbeddings.  
+
+\addcontentsline{toc}{chapter}{\protect\numberline{}{Bibliography}}
+\bibliographystyle{plain}
+\bibliography{thesis}
+
+\end{document}

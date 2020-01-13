@@ -4,6 +4,32 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import normalize
 from sklearn.preprocessing import MinMaxScaler
 
+def create_learn_n_dataset_helper(num_samples, low, high, n, d, num_updates):
+    
+    for i in range(num_samples):
+        original_ds_size = np.random.randint(0, 1000)
+        original_ds = np.random.randint(low, high+1, size=(original_ds_size, d+1))
+        updates = np.random.randint(low, high+1, size=(num_updates, d+1))
+        betas = np.zeros((num_updates+1, d))
+        lm = LinearRegression(fit_intercept=False)
+        lm.fit(original_ds[:,:-1], original_ds[:,-1])
+        betas[i,0] = lm.coef_
+        for j in range(num_updates):
+            ds = np.append(original_ds, updates[i], axis=0)
+            lm.fit(ds[:,:-1], ds[:,-1])
+            betas[i,j] = lm.coef_
+
+def create_learn_n_dataset(num_samples=1000, low=-100, high=100, n=1, d=1, num_updates=1, save=False):
+    Xtrain,ytrain = create_dataset_helper(num_samples,low,high,n,d,num_updates)
+    Xtest,ytest = create_dataset_helper((int)(.2*num_samples), low,high,n,d,num_updates)
+    dataset = {"Xtrain": Xtrain, "ytrain": ytrain,
+               "Xtest": Xtest, "ytest": ytest}
+    if save:
+        for data in dataset:
+            df = pd.DataFrame(dataset[data])
+            df.to_csv(data+".csv", index=None, header=None)
+    return dataset
+
 def create_dataset_helper(num_samples,low,high,n,d,num_updates):
     #assumes n = 1 for original dataset
     #probably move to keras/tf backend as n grows

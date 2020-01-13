@@ -1,0 +1,5 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {1.1}Preliminaries about Graph Imbeddings}{2}
+\contentsline {subsection}{\numberline {1.1.1}Surfaces}{2}
+\contentsline {subsection}{\numberline {1.1.2}Graph imbeddings and faces}{3}
+\contentsline {chapter}{\numberline {}{Bibliography}}{3}
